@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RetailIQ - Smart Supply Chain Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.min.js" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #0071ce, #004c91);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0071ce;
+        }
+
+        .nav-items {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-item {
+            color: #555;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: #f0f7ff;
+            color: #0071ce;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 40px 0;
+        }
+
+        .hero-section {
+            text-align: center;
+            color: white;
+            margin-bottom: 50px;
+        }
+
+        .hero-title {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: #ffd700;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-top: 4px;
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .dashboard-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+        }
+
+        .icon-inventory { background: linear-gradient(135deg, #667eea, #764ba2); }
+        .icon-pricing { background: linear-gradient(135deg, #f093fb, #f5576c); }
+        .icon-analytics { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+        .icon-supply { background: linear-gradient(135deg, #43e97b, #38f9d7); }
+
+        /* Product Table */
+        .product-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .product-table th,
+        .product-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .product-table th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .status-restock {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .status-warning {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .status-good {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .price-change {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 500;
+            font-size: 12px;
+        }
+
+        .price-increase {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .price-decrease {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        /* Input Forms */
+        .input-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .input-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #0071ce;
+            box-shadow: 0 0 0 3px rgba(0, 113, 206, 0.1);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #0071ce, #004c91);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 113, 206, 0.3);
+        }
+
+        /* Chart Container */
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-top: 20px;
+        }
+
+        /* Loading and Error States */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .error {
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+
+        .success {
+            background: #dcfce7;
+            color: #16a34a;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .dashboard-grid,
+            .input-section {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-title {
+                font-size: 32px;
+            }
+
+            .hero-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .nav-items {
+                gap: 15px;
+            }
+
+            .product-table {
+                font-size: 12px;
+            }
+
+            .dashboard-card,
+            .input-card {
+                padding: 20px;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .dashboard-card,
+        .input-card {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .dashboard-card:nth-child(2) { animation-delay: 0.1s; }
+        .dashboard-card:nth-child(3) { animation-delay: 0.2s; }
+        .dashboard-card:nth-child(4) { animation-delay: 0.3s; }
+
+        /* Page Section Styles */
+        .page-section {
+            animation: fadeInUp 0.4s ease-out;
+        }
+
+        .page-section.fade-out {
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">W</div>
+                    <div class="logo-text">RetailIQ</div>
+                </div>
+                <nav class="nav-items">
+                    <a href="#dashboard" class="nav-item active" onclick="showSection('dashboard')">Dashboard</a>
+                    <a href="#inventory" class="nav-item" onclick="showSection('inventory')">Inventory</a>
+                    <a href="#pricing" class="nav-item" onclick="showSection('pricing')">Pricing</a>
+                    <a href="#analytics" class="nav-item" onclick="showSection('analytics')">Analytics</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Dashboard Section -->
+            <div id="dashboard-section" class="page-section">
+                <!-- Hero Section -->
+                <section class="hero-section">
+                    <h1 class="hero-title">RetailIQ Dashboard</h1>
+                    <p class="hero-subtitle">AI-powered inventory management and dynamic pricing optimization for next-generation retail</p>
+                    
+                    <div class="hero-stats" id="heroStats">
+                        <div class="stat-card">
+                            <span class="stat-number" id="totalProducts">-</span>
+                            <span class="stat-label">Products Monitored</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number" id="lowStockProducts">-</span>
+                            <span class="stat-label">Low Stock Alerts</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number" id="restockNeeded">-</span>
+                            <span class="stat-label">Restock Needed</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number" id="avgPriceChange">-</span>
+                            <span class="stat-label">Avg Price Change %</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Dashboard Grid -->
+                <div class="dashboard-grid">
+                    <!-- Inventory Management -->
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <div class="card-icon icon-inventory">
+                                    <i class="fas fa-boxes"></i>
+                                </div>
+                                Inventory Management
+                            </div>
+                        </div>
+                        <div id="inventoryContent">
+                            <div class="loading">Loading inventory data...</div>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Pricing -->
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <div class="card-icon icon-pricing">
+                                    <i class="fas fa-tag"></i>
+                                </div>
+                                Dynamic Pricing
+                            </div>
+                        </div>
+                        <div id="pricingContent">
+                            <div class="loading">Loading pricing data...</div>
+                        </div>
+                    </div>
+
+                    <!-- Analytics Dashboard -->
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <div class="card-icon icon-analytics">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                Stock Distribution
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="stockChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Supply Chain Overview -->
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <div class="card-icon icon-supply">
+                                    <i class="fas fa-truck"></i>
+                                </div>
+                                RetailIQ Insights
+                            </div>
+                        </div>
+                        <div id="supplyChainContent">
+                            <div class="loading">Loading supply chain data...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Input Forms -->
+                <div class="input-section">
+                    <!-- Custom Restock Prediction -->
+                    <div class="input-card">
+                        <h3 class="card-title" style="margin-bottom: 20px;">
+                            <div class="card-icon icon-inventory" style="display: inline-flex; margin-right: 10px;">
+                                <i class="fas fa-calculator"></i>
+                            </div>
+                            Custom Restock Prediction
+                        </h3>
+                        <form id="restockForm">
+                            <div class="form-group">
+                                <label class="form-label">Current Stock</label>
+                                <input type="number" class="form-input" id="currentStock" placeholder="Enter current stock level" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Forecasted Demand</label>
+                                <input type="number" class="form-input" id="forecastedDemand" placeholder="Enter demand forecast" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Historical Sales</label>
+                                <input type="number" class="form-input" id="historicalSales" placeholder="Enter historical sales" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Lead Time (days)</label>
+                                <input type="number" class="form-input" id="leadTime" placeholder="Enter lead time" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Category</label>
+                                <select class="form-input" id="category" required>
+                                    <option value="">Select category</option>
+                                    <option value="FOODS_1">Foods</option>
+                                    <option value="HOBBIES_1">Hobbies</option>
+                                    <option value="HOUSEHOLD_1">Household</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn">Predict Restock Need</button>
+                        </form>
+                        <div id="restockResult"></div>
+                    </div>
+
+                    <!-- Custom Price Optimization -->
+                    <div class="input-card">
+                        <h3 class="card-title" style="margin-bottom: 20px;">
+                            <div class="card-icon icon-pricing" style="display: inline-flex; margin-right: 10px;">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                            Price Optimization
+                        </h3>
+                        <form id="pricingForm">
+                            <div class="form-group">
+                                <label class="form-label">Current Inventory</label>
+                                <input type="number" class="form-input" id="inventory" placeholder="Enter inventory level" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Demand Forecast</label>
+                                <input type="number" class="form-input" id="demandForecast" placeholder="Enter demand forecast" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Competitor Price ($)</label>
+                                <input type="number" step="0.01" class="form-input" id="competitorPrice" placeholder="Enter competitor price" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Profit Margin</label>
+                                <input type="number" step="0.01" min="0" max="1" class="form-input" id="profitMargin" placeholder="Enter profit margin (0-1)" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Weekend Sales</label>
+                                <select class="form-input" id="isWeekend" required>
+                                    <option value="0">Weekday</option>
+                                    <option value="1">Weekend</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn">Optimize Price</button>
+                        </form>
+                        <div id="pricingResult"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Inventory Section -->
+            <div id="inventory-section" class="page-section" style="display: none;">
+                <section class="hero-section">
+                    <h1 class="hero-title">Inventory Management</h1>
+                    <p class="hero-subtitle">Advanced AI-powered inventory optimization and restock predictions</p>
+                </section>
+
+                <div class="dashboard-grid">
+                    <div class="dashboard-card" style="grid-column: 1 / -1;">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <div class="card-icon icon-inventory">
+                                    <i class="fas fa-warehouse"></i>
+                                </div>
+                                Complete Inventory Overview
+                            </div>
+                        </div>
+                        <div id="detailedInventoryContent">
+                            <div class="loading">Loading detailed inventory data...</div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <div class="card-icon icon-analytics">
+                                    <i class="fas fa-chart-bar"></i>
+                                </div>
+                                Stock Trends
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="stockTrendChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <div class="card-icon icon-supply">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                                Critical Alerts
+                            </div>
+                        </div>
+                        <div id="criticalAlertsContent">
+                            <div class="loading">Loading alerts...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pricing Section -->
+            <div id="pricing-section" class="page-section" style="display: none;">
+                <section class="hero-section">
+                    <h1 class="hero-title">Dynamic Pricing</h1>
+                    <p class="hero-subtitle">Real-time price optimization based on market conditions and inventory levels</p>
+                </section>
+
+                <div class="dashboard-grid">
+                    <div class="dashboard-card" style="grid-column: 1 / -1;">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <div class="card-icon icon-pricing">
+                                    <i class="fas fa-tags"></i>
+                                </div>
+                                Price Optimization Dashboard
+                            </div>
+                        </div>
+                        <div id="detailedPricingContent">
+                            <div class="loading">Loading pricing optimization data...</div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <div class="card-icon icon-analytics">
+                                    <i class="fas fa-line-chart"></i>
+                                </div>
+                                Price Trends
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="priceTrendChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <div class="card-icon icon-supply">
+                                    <i class="fas fa-dollar-sign"></i>
+                                </div>
+                                Revenue Impact
+                            </div>
+                        </div>
+                        <div id="revenueImpactContent">
+                            <div class="loading">Loading revenue analysis...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Section -->
+            <div id="analytics-section" class="page-section" style="display: none;">
+                <section class="hero-section">
+                    <h1 class="hero-title">Advanced Analytics</h1>
+                    <p class="hero-subtitle">Comprehensive insights and performance metrics for supply chain optimization</p>
+                </section>
+
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <div class="card-icon icon-analytics">
+                                    <i class="fas fa-chart-pie"></i>
+                                </div>
+                                Performance Metrics
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="performanceChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <div class="card-icon icon-supply">
+                                    <i class="fas fa-truck-fast"></i>
+                                </div>
+                                Supply Chain Efficiency
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="efficiencyChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card" style="grid-column: 1 / -1;">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <div class="card-icon icon-analytics">
+                                    <i class="fas fa-chart-area"></i>
+                                </div>
+                                Forecast Accuracy
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="forecastChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <div class="card-icon icon-pricing">
+                                    <i class="fas fa-calculator"></i>
+                                </div>
+                                Cost Optimization
+                            </div>
+                        </div>
+                        <div id="costOptimizationContent">
+                            <div class="loading">Loading cost analysis...</div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <div class="card-icon icon-supply">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                ROI Analysis
+                            </div>
+                        </div>
+                        <div id="roiAnalysisContent">
+                            <div class="loading">Loading ROI data...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Global variables
+        let stockChart = null;
+        let productsData = [];
+        let currentSection = 'dashboard';
+
+        // Navigation function
+        function showSection(sectionName) {
+            // Update current section
+            currentSection = sectionName;
+            
+            // Hide all sections
+            document.querySelectorAll('.page-section').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Show selected section
+            document.getElementById(sectionName + '-section').style.display = 'block';
+            
+            // Update active nav item
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Load section-specific content
+            loadSectionContent(sectionName);
+        }
+
+        // Load content for specific sections
+        function loadSectionContent(section) {
+            switch(section) {
+                case 'dashboard':
+                    loadDashboardData();
+                    break;
+                case 'inventory':
+                    loadInventoryContent();
+                    break;
+                case 'pricing':
+                    loadPricingContent();
+                    break;
+                case 'analytics':
+                    loadAnalyticsContent();
+                    break;
+            }
+        }
+
+        // Load detailed inventory content
+        function loadInventoryContent() {
+            updateDetailedInventoryContent();
+            updateStockTrendChart();
+            updateCriticalAlerts();
+        }
+
+        // Load detailed pricing content
+        function loadPricingContent() {
+            updateDetailedPricingContent();
+            updatePriceTrendChart();
+            updateRevenueImpact();
+        }
+
+        // Load analytics content
+        function loadAnalyticsContent() {
+            updatePerformanceChart();
+            updateEfficiencyChart();
+            updateForecastChart();
+            updateCostOptimization();
+            updateROIAnalysis();
+        }
+
+        // Update detailed inventory content
+        function updateDetailedInventoryContent() {
+            const container = document.getElementById('detailedInventoryContent');
+            
+            if (productsData.length === 0) {
+                container.innerHTML = '<div class="loading">No inventory data available</div>';
+                return;
+            }
+
+            const tableHTML = `
+                <div style="margin-bottom: 20px;">
+                    <input type="text" placeholder="Search products..." style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px; margin-bottom: 15px;">
+                    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                        <button class="btn" style="padding: 8px 16px; font-size: 12px;">All Products</button>
+                        <button class="btn" style="padding: 8px 16px; font-size: 12px; background: #ef4444;">Low Stock</button>
+                        <button class="btn" style="padding: 8px 16px; font-size: 12px; background: #f59e0b;">Restock Needed</button>
+                    </div>
+                </div>
+                <table class="product-table">
+                    <thead>
+                        <tr>
+                            <th>Product ID</th>
+                            <th>Product Name</th>
+                            <th>Category</th>
+                            <th>Current Stock</th>
+                            <th>Demand Forecast</th>
+                            <th>Lead Time</th>
+                            <th>Status</th>
+                            <th>Recommended Action</th>
+                            <th>Priority</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${productsData.map(product => `
+                            <tr>
+                                <td style="font-family: monospace; font-size: 12px;">${product.id}</td>
+                                <td>
+                                    <div style="font-weight: 500;">${product.name}</div>
+                                    <div style="font-size: 12px; color: #666;">${product.store}</div>
+                                </td>
+                                <td>${product.department}</td>
+                                <td>
+                                    <span style="font-weight: 600; color: ${product.current_stock < 10 ? '#ef4444' : product.current_stock < 20 ? '#f59e0b' : '#10b981'}">
+                                        ${product.current_stock}
+                                    </span>
+                                </td>
+                                <td>${product.forecasted_demand}</td>
+                                <td>${product.lead_time_days} days</td>
+                                <td>
+                                    <span class="status-badge ${getStatusClass(product.restock_decision)}">
+                                        ${product.restock_decision}
+                                    </span>
+                                </td>
+                                <td>
+                                    ${product.restock_quantity > 0 ? 
+                                        `<strong>Order ${product.restock_quantity} units</strong>` : 
+                                        'Maintain current levels'
+                                    }
+                                </td>
+                                <td>
+                                    <span style="padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 500; background: ${
+                                        product.current_stock < 10 ? '#fee2e2; color: #dc2626' : 
+                                        product.restock_decision === 'restock' ? '#fef3c7; color: #d97706' : 
+                                        '#dcfce7; color: #16a34a'
+                                    }">
+                                        ${product.current_stock < 10 ? 'HIGH' : product.restock_decision === 'restock' ? 'MEDIUM' : 'LOW'}
+                                    </span>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            
+            container.innerHTML = tableHTML;
+        }
+
+        // Update stock trend chart
+        function updateStockTrendChart() {
+            const ctx = document.getElementById('stockTrendChart');
+            if (!ctx) return;
+            
+            new Chart(ctx.getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Current'],
+                    datasets: [{
+                        label: 'Average Stock Level',
+                        data: [65, 59, 80, 81, 56],
+                        borderColor: '#0071ce',
+                        backgroundColor: 'rgba(0, 113, 206, 0.1)',
+                        tension: 0.4
+                    }, {
+                        label: 'Demand Forecast',
+                        data: [28, 48, 40, 19, 86],
+                        borderColor: '#ef4444',
+                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    }
+                }
+            });
+        }
+
+        // Update critical alerts
+        function updateCriticalAlerts() {
+            const container = document.getElementById('criticalAlertsContent');
+            
+            const alerts = [
+                { type: 'critical', message: 'Laundry Detergent stock critically low (8 units)', time: '2 minutes ago' },
+                { type: 'warning', message: 'Board Game Set requires restocking within 3 days', time: '15 minutes ago' },
+                { type: 'info', message: 'Organic Bananas demand forecast updated', time: '1 hour ago' },
+                { type: 'success', message: 'Household items stock levels optimized', time: '2 hours ago' }
+            ];
+
+            const alertsHTML = alerts.map(alert => `
+                <div style="display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 8px; margin-bottom: 10px; background: ${
+                    alert.type === 'critical' ? '#fee2e2' : 
+                    alert.type === 'warning' ? '#fef3c7' : 
+                    alert.type === 'info' ? '#dbeafe' : '#dcfce7'
+                }">
+                    <i class="fas fa-${
+                        alert.type === 'critical' ? 'exclamation-circle' : 
+                        alert.type === 'warning' ? 'exclamation-triangle' : 
+                        alert.type === 'info' ? 'info-circle' : 'check-circle'
+                    }" style="color: ${
+                        alert.type === 'critical' ? '#dc2626' : 
+                        alert.type === 'warning' ? '#d97706' : 
+                        alert.type === 'info' ? '#2563eb' : '#16a34a'
+                    }"></i>
+                    <div style="flex: 1;">
+                        <div style="font-weight: 500; color: #333;">${alert.message}</div>
+                        <div style="font-size: 12px; color: #666;">${alert.time}</div>
+                    </div>
+                </div>
+            `).join('');
+
+            container.innerHTML = alertsHTML;
+        }
+
+        // Update detailed pricing content
+        function updateDetailedPricingContent() {
+            const container = document.getElementById('detailedPricingContent');
+            
+            if (productsData.length === 0) {
+                container.innerHTML = '<div class="loading">No pricing data available</div>';
+                return;
+            }
+
+            const tableHTML = `
+                <div style="margin-bottom: 20px;">
+                    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                        <button class="btn" style="padding: 8px 16px; font-size: 12px;">All Products</button>
+                        <button class="btn" style="padding: 8px 16px; font-size: 12px; background: #10b981;">Price Increase</button>
+                        <button class="btn" style="padding: 8px 16px; font-size: 12px; background: #ef4444;">Price Decrease</button>
+                    </div>
+                </div>
+                <table class="product-table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Current Price</th>
+                            <th>Competitor Price</th>
+                            <th>Optimal Price</th>
+                            <th>Price Change</th>
+                            <th>Revenue Impact</th>
+                            <th>Profit Margin</th>
+                            <th>Recommendation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${productsData.map(product => {
+                            const revenueImpact = (product.optimal_price * product.forecasted_demand) - (product.competitor_price * product.forecasted_demand);
+                            return `
+                                <tr>
+                                    <td>
+                                        <div style="font-weight: 500;">${product.name}</div>
+                                        <div style="font-size: 12px; color: #666;">${product.category}</div>
+                                    </td>
+                                    <td>$${product.competitor_price}</td>
+                                    <td>$${product.competitor_price}</td>
+                                    <td style="font-weight: 600;">$${product.optimal_price}</td>
+                                    <td>
+                                        <span class="price-change ${product.price_change >= 0 ? 'price-increase' : 'price-decrease'}">
+                                            ${product.price_change >= 0 ? '+' : ''}${product.price_change}%
+                                        </span>
+                                    </td>
+                                    <td style="color: ${revenueImpact >= 0 ? '#10b981' : '#ef4444'};">
+                                        ${revenueImpact >= 0 ? '+' : ''}$${revenueImpact.toFixed(2)}
+                                    </td>
+                                    <td>${(product.profit_margin * 100).toFixed(1)}%</td>
+                                    <td>
+                                        ${Math.abs(product.price_change) > 5 ? 
+                                            `<strong>${product.price_change > 0 ? 'Increase' : 'Decrease'} price</strong>` : 
+                                            'Maintain current price'
+                                        }
+                                    </td>
+                                </tr>
+                            `;
+                        }).join('')}
+                    </tbody>
+                </table>
+            `;
+            
+            container.innerHTML = tableHTML;
+        }
+
+        // Update additional chart functions
+        function updatePriceTrendChart() {
+            const ctx = document.getElementById('priceTrendChart');
+            if (!ctx) return;
+            
+            new Chart(ctx.getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Average Price',
+                        data: [12, 19, 15, 17, 14, 16],
+                        borderColor: '#0071ce',
+                        backgroundColor: 'rgba(0, 113, 206, 0.1)',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+
+        function updateRevenueImpact() {
+            const container = document.getElementById('revenueImpactContent');
+            container.innerHTML = `
+                <div style="text-align: center; padding: 20px;">
+                    <div style="font-size: 32px; font-weight: 700; color: #10b981;">+$2,847</div>
+                    <div style="color: #666; margin-bottom: 20px;">Projected Monthly Revenue Increase</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; text-align: left;">
+                        <div>
+                            <div style="font-weight: 600;">Optimization Rate</div>
+                            <div style="color: #10b981;">94.2%</div>
+                        </div>
+                        <div>
+                            <div style="font-weight: 600;">Margin Improvement</div>
+                            <div style="color: #10b981;">+3.2%</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updatePerformanceChart() {
+            const ctx = document.getElementById('performanceChart');
+            if (!ctx) return;
+            
+            new Chart(ctx.getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Excellent', 'Good', 'Average', 'Poor'],
+                    datasets: [{
+                        data: [45, 30, 20, 5],
+                        backgroundColor: ['#10b981', '#f59e0b', '#6b7280', '#ef4444']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+
+        function updateEfficiencyChart() {
+            const ctx = document.getElementById('efficiencyChart');
+            if (!ctx) return;
+            
+            new Chart(ctx.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+                    datasets: [{
+                        label: 'Efficiency %',
+                        data: [78, 85, 92, 88],
+                        backgroundColor: '#0071ce'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+
+        function updateForecastChart() {
+            const ctx = document.getElementById('forecastChart');
+            if (!ctx) return;
+            
+            new Chart(ctx.getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6'],
+                    datasets: [{
+                        label: 'Actual Demand',
+                        data: [65, 59, 80, 81, 56, 78],
+                        borderColor: '#0071ce',
+                        backgroundColor: 'rgba(0, 113, 206, 0.1)'
+                    }, {
+                        label: 'Forecasted Demand',
+                        data: [62, 61, 77, 83, 58, 75],
+                        borderColor: '#ef4444',
+                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                        borderDash: [5, 5]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+
+        function updateCostOptimization() {
+            const container = document.getElementById('costOptimizationContent');
+            container.innerHTML = `
+                <div style="padding: 20px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div>
+                            <div style="font-weight: 600; margin-bottom: 10px;">Cost Savings</div>
+                            <div style="font-size: 24px; color: #10b981; font-weight: 700;">$15,420</div>
+                            <div style="font-size: 12px; color: #666;">This month</div>
+                        </div>
+                        <div>
+                            <div style="font-weight: 600; margin-bottom: 10px;">Efficiency Gain</div>
+                            <div style="font-size: 24px; color: #0071ce; font-weight: 700;">12.5%</div>
+                            <div style="font-size: 12px; color: #666;">vs last month</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateROIAnalysis() {
+            const container = document.getElementById('roiAnalysisContent');
+            container.innerHTML = `
+                <div style="padding: 20px;">
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <div style="font-size: 28px; font-weight: 700; color: #10b981;">247%</div>
+                        <div style="color: #666;">Return on Investment</div>
+                    </div>
+                    <div style="border-top: 1px solid #eee; padding-top: 15px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span>Investment:</span>
+                            <span style="font-weight: 600;">$50,000</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span>Returns:</span>
+                            <span style="font-weight: 600; color: #10b981;">$123,500</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>Payback Period:</span>
+                            <span style="font-weight: 600;">4.2 months</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Load dashboard data
+        async function loadDashboardData() {
+            try {
+                // Load analytics
+                const analyticsResponse = await fetch('/api/analytics');
+                const analytics = await analyticsResponse.json();
+                updateHeroStats(analytics);
+
+                // Load products
+                const productsResponse = await fetch('/api/products');
+                productsData = await productsResponse.json();
+                updateInventoryContent();
+                updatePricingContent();
+                updateStockChart(analytics.stock_distribution);
+                updateSupplyChainContent();
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+                showError('Failed to load dashboard data');
+            }
+        }
+
+        // Update hero statistics
+        function updateHeroStats(analytics) {
+            document.getElementById('totalProducts').textContent = analytics.total_products;
+            document.getElementById('lowStockProducts').textContent = analytics.low_stock_products;
+            document.getElementById('restockNeeded').textContent = analytics.restock_needed;
+            document.getElementById('avgPriceChange').textContent = analytics.avg_price_change + '%';
+        }
+
+        // Update inventory content
+        function updateInventoryContent() {
+            const container = document.getElementById('inventoryContent');
+            
+            if (productsData.length === 0) {
+                container.innerHTML = '<div class="loading">No inventory data available</div>';
+                return;
+            }
+
+            const tableHTML = `
+                <table class="product-table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Stock</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${productsData.map(product => `
+                            <tr>
+                                <td>
+                                    <div style="font-weight: 500;">${product.name}</div>
+                                    <div style="font-size: 12px; color: #666;">${product.category}</div>
+                                </td>
+                                <td>${product.current_stock}</td>
+                                <td>
+                                    <span class="status-badge ${getStatusClass(product.restock_decision)}">
+                                        ${product.restock_decision}
+                                    </span>
+                                </td>
+                                <td>
+                                    ${product.restock_quantity > 0 ? `Restock ${product.restock_quantity}` : 'No action needed'}
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            
+            container.innerHTML = tableHTML;
+        }
+
+        // Update pricing content
+        function updatePricingContent() {
+            const container = document.getElementById('pricingContent');
+            
+            if (productsData.length === 0) {
+                container.innerHTML = '<div class="loading">No pricing data available</div>';
+                return;
+            }
+
+            const tableHTML = `
+                <table class="product-table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Current</th>
+                            <th>Optimal</th>
+                            <th>Change</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${productsData.map(product => `
+                            <tr>
+                                <td>
+                                    <div style="font-weight: 500;">${product.name}</div>
+                                    <div style="font-size: 12px; color: #666;">${product.category}</div>
+                                </td>
+                                <td>$${product.competitor_price}</td>
+                                <td>$${product.optimal_price}</td>
+                                <td>
+                                    <span class="price-change ${product.price_change >= 0 ? 'price-increase' : 'price-decrease'}">
+                                        ${product.price_change >= 0 ? '+' : ''}${product.price_change}%
+                                    </span>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            
+            container.innerHTML = tableHTML;
+        }
+
+        // Update stock chart
+        function updateStockChart(stockDistribution) {
+            const ctx = document.getElementById('stockChart').getContext('2d');
+            
+            if (stockChart) {
+                stockChart.destroy();
+            }
+
+            stockChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Low Stock', 'Medium Stock', 'High Stock'],
+                    datasets: [{
+                        data: [stockDistribution.low, stockDistribution.medium, stockDistribution.high],
+                        backgroundColor: [
+                            '#ef4444',
+                            '#f59e0b',
+                            '#10b981'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                font: {
+                                    family: 'Inter'
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Update supply chain content
+        function updateSupplyChainContent() {
+            const container = document.getElementById('supplyChainContent');
+            
+            const insights = [
+                { icon: 'fas fa-shipping-fast', label: 'Average Lead Time', value: '4.3 days', trend: 'down' },
+                { icon: 'fas fa-chart-line', label: 'Forecast Accuracy', value: '94.2%', trend: 'up' },
+                { icon: 'fas fa-dollar-sign', label: 'Cost Optimization', value: '12.5%', trend: 'up' },
+                { icon: 'fas fa-clock', label: 'Order Cycle Time', value: '2.8 days', trend: 'down' }
+            ];
+
+            const insightsHTML = insights.map(insight => `
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #eee;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <i class="${insight.icon}" style="color: #0071ce; width: 20px;"></i>
+                        <span style="font-weight: 500;">${insight.label}</span>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-weight: 600; color: #333;">${insight.value}</div>
+                        <i class="fas fa-arrow-${insight.trend === 'up' ? 'up' : 'down'}" style="color: ${insight.trend === 'up' ? '#10b981' : '#ef4444'}; font-size: 12px;"></i>
+                    </div>
+                </div>
+            `).join('');
+
+            container.innerHTML = insightsHTML;
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Restock form
+            document.getElementById('restockForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                await handleRestockPrediction();
+            });
+
+            // Pricing form
+            document.getElementById('pricingForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                await handlePricePrediction();
+            });
+        }
+
+        // Handle restock prediction
+        async function handleRestockPrediction() {
+            const resultDiv = document.getElementById('restockResult');
+            resultDiv.innerHTML = '<div class="loading">Calculating restock prediction...</div>';
+
+            try {
+                const formData = {
+                    current_stock: parseInt(document.getElementById('currentStock').value),
+                    forecasted_demand: parseInt(document.getElementById('forecastedDemand').value),
+                    historical_sales: parseInt(document.getElementById('historicalSales').value),
+                    lead_time_days: parseInt(document.getElementById('leadTime').value),
+                    cat_id: document.getElementById('category').value
+                };
+
+                const response = await fetch('/api/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        type: 'restock',
+                        data: formData
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    const resultHTML = `
+                        <div class="success" style="margin-top: 20px;">
+                            <strong>Prediction Result:</strong><br>
+                            Decision: ${result.result.decision}<br>
+                            ${result.result.restock_quantity > 0 ? `Restock Quantity: ${result.result.restock_quantity}` : 'No restock needed'}
+                        </div>
+                    `;
+                    resultDiv.innerHTML = resultHTML;
+                } else {
+                    resultDiv.innerHTML = `<div class="error" style="margin-top: 20px;">Error: ${result.error}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error" style="margin-top: 20px;">Error: ${error.message}</div>`;
+            }
+        }
+
+        // Handle price prediction
+        async function handlePricePrediction() {
+            const resultDiv = document.getElementById('pricingResult');
+            resultDiv.innerHTML = '<div class="loading">Optimizing price...</div>';
+
+            try {
+                const inventory = parseInt(document.getElementById('inventory').value);
+                const demandForecast = parseInt(document.getElementById('demandForecast').value);
+                const competitorPrice = parseFloat(document.getElementById('competitorPrice').value);
+                const profitMargin = parseFloat(document.getElementById('profitMargin').value);
+                const isWeekend = parseInt(document.getElementById('isWeekend').value);
+
+                const formData = {
+                    inventory: inventory,
+                    demand_forecast: demandForecast,
+                    competitor_price: competitorPrice,
+                    profit_margin: profitMargin,
+                    price_elasticity: demandForecast / competitorPrice,
+                    is_weekend: isWeekend
+                };
+
+                const response = await fetch('/api/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        type: 'pricing',
+                        data: formData
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    const optimalPrice = result.result.optimal_price;
+                    const priceChange = ((optimalPrice - competitorPrice) / competitorPrice * 100).toFixed(2);
+                    
+                    const resultHTML = `
+                        <div class="success" style="margin-top: 20px;">
+                            <strong>Optimal Price:</strong> $${optimalPrice}<br>
+                            <strong>Price Change:</strong> ${priceChange >= 0 ? '+' : ''}${priceChange}%<br>
+                            <strong>Competitor Price:</strong> $${competitorPrice}
+                        </div>
+                    `;
+                    resultDiv.innerHTML = resultHTML;
+                } else {
+                    resultDiv.innerHTML = `<div class="error" style="margin-top: 20px;">Error: ${result.error}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error" style="margin-top: 20px;">Error: ${error.message}</div>`;
+            }
+        }
+
+        // Utility functions
+        function getStatusClass(decision) {
+            switch(decision) {
+                case 'restock': return 'status-restock';
+                case 'low-stock warning': return 'status-warning';
+                case 'no restock': return 'status-good';
+                default: return 'status-good';
+            }
+        }
+
+        function showError(message) {
+            console.error(message);
+            // Could add a toast notification here
+        }
+
+        // Auto-refresh data every 30 seconds
+        setInterval(loadDashboardData, 30000);
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            loadDashboardData();
+            setupEventListeners();
+        });
+    </script>
+</body>
+</html>
